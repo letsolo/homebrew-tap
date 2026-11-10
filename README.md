@@ -1,43 +1,33 @@
-# LetSolo macOS
+# LetSolo Homebrew tap
 
-macOS application releases and the Homebrew tap for LetSolo products.
+The universal macOS cask catalog for LetSolo products. Application installers and update feeds belong in each product's own public release repository; this tap does not host application releases.
 
-## Downloads and Homebrew
-
-Signed macOS installers and update files are published in [Releases](https://github.com/letsolo/homebrew-macos/releases). Tags use `<application>-v<version>` so several products can share this repository.
-
-Add the tap:
+## Install
 
 ```bash
-brew tap letsolo/macos
+brew tap letsolo/tap
 ```
 
-After a product cask has been added, install it with `brew install --cask letsolo/macos/<application>`. There are no application casks or binaries yet. Casks belong under `Casks/` and must reference the matching release URL and SHA-256 checksum.
+Once the first signed and notarized LBV macOS release and its cask are published:
 
-## Publication flow
+```bash
+brew install --cask letsolo/tap/lbv
+```
 
-A private product repository builds, signs, and tests its macOS app. Its workflow calls `letsolo/github-workflows/.github/workflows/release.yml@v1` with `platform: macos` and the name of the artifact uploaded in the same workflow run. The shared workflow publishes here using a repository-scoped Vapor token. It generates `SHA256SUMS` and creates a draft release by default.
+No LBV cask is advertised before real installers exist. The private publisher creates `Casks/lbv.rb` only after verifying public downloads in `letsolo/lbv`, with Apple Silicon/Intel-specific checksums and the `鹊桥VPN.app` bundle. Future products add their own casks to this same tap.
 
-Homebrew cask updates are separate bot commits after the installer URL and checksum are known. Public delivery of a private product artifact must be intentional; only installers and update files belong here.
+## Migration
 
-## Vapor authentication
+This repository was renamed from `homebrew-macos`. GitHub preserves its history and redirects; new integrations should use `letsolo/homebrew-tap`. Existing users can switch their tap explicitly when the first real cask is available. The former platform release repositories are not the product update source.
 
-All code authorship, committers, pushes, tags, and GitHub releases use `letsolo-vapor[bot]`. A new checkout must be configured before its first commit:
+## Publication and privacy
+
+Vapor (`letsolo-vapor[bot]`) authors and commits all cask changes with a token scoped to this repository. Private central CI owns builds, signing, and notarization. Do not add source-repository references, private metadata, personal account information, credentials, build receipts, or local paths here.
+
+Configure a new checkout using external private App metadata:
 
 ```bash
 python3 -I scripts/bot.py --config <private-app-config> configure
 ```
 
-In a configured checkout, ordinary `git commit` and `git push` use the bot. Bot-authenticated GitHub CLI commands use the local alias:
-
-```bash
-git bot-gh release list
-```
-
-```bash
-python3 -I scripts/bot.py verify
-```
-
-The App is installed across the organization, while each local token is restricted to one allowed repository. Private configuration stays outside the checkout. Credential failures stop Git instead of falling back to a personal login. Local hooks are safeguards, not server-enforced access restrictions.
-
-`Publisher identity` verifies bot authorship and the push actor. `scripts/check-repository.py` checks tracked files for credentials and personal machine paths. Actions uses variable `PUBLISHER_APP_CLIENT_ID` and encrypted secret `PUBLISHER_APP_PRIVATE_KEY`; no private values belong in this repository.
+A configured checkout uses the bot for `git commit`, `git push`, and `git bot-gh`. Credential errors stop operations without personal-account fallback. `Publisher identity` validates new commit authorship, the push actor, and repository privacy. Local hooks are safeguards rather than server-enforced access restrictions.
