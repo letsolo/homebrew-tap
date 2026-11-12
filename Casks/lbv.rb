@@ -1,11 +1,11 @@
 cask "lbv" do
   arch arm: "arm64", intel: "amd64"
 
-  version "1.1.2"
-  sha256 arm: "47437f882458703636868d395bf2a39ba53db5c5c5fba05f425df56b9dfbb668",
-         intel: "30c081c51879353df6603ed6859bed8a7de48e05bb2314791ffaca3ffb1744dd"
+  version "1.1.3"
+  sha256 arm: "cd11c6a8ae57fdebf4a3528acf6cf829a65dabad95620f1325ea6976b3d529fe",
+         intel: "a511b7111b341dc765ca779e56df2a666acf1ba40fe890c99b68fb81ad961266"
 
-  url "https://github.com/letsolo/lbv/releases/download/v1.1.2/LoveBridgeVPN-1.1.2-macos-#{arch}.dmg"
+  url "https://github.com/letsolo/lbv/releases/download/v1.1.3/LoveBridgeVPN-1.1.3-macos-#{arch}.dmg"
   name "LoveBridgeVPN"
   desc "LoveBridgeVPN client"
   homepage "https://github.com/letsolo/lbv"
